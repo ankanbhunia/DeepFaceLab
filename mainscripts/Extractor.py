@@ -22,6 +22,8 @@ from core.leras import nn
 from core import pathex
 from core.cv2ex import *
 from DFLIMG import *
+
+sys.path.append('/content/')
 import settings
 DEBUG = False
 

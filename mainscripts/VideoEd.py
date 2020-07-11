@@ -111,7 +111,7 @@ def denoise_image_sequence( input_dir, ext=None, factor=None ):
 
     # Rename to temporary filenames
     for i,filepath in io.progress_bar_generator( enumerate(image_paths), "Renaming", leave=False):
-        src = filepathdenoise
+        src = filepath
         dst = filepath.parent / ( f'{i+1:06}_{filepath.name}' )
         try:
             src.rename (dst)
