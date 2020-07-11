@@ -1,9 +1,8 @@
 import numpy as np
 import copy
-
 from facelib import FaceType
 from core.interact import interact as io
-
+import settings
 
 class MergerConfig(object):
     TYPE_NONE = 0
@@ -36,7 +35,7 @@ class MergerConfig(object):
         for key in self.sharpen_dict.keys():
             s += f"""({key}) {self.sharpen_dict[key]}\n"""
         io.log_info(s)
-        self.sharpen_mode = io.input_int ("", 0, valid_list=self.sharpen_dict.keys(), help_message="Enhance details by applying sharpen filter.")
+        self.sharpen_mode = settings.sharpen_mode#io.input_int ("", 0, valid_list=self.sharpen_dict.keys(), help_message="Enhance details by applying sharpen filter.")
 
         if self.sharpen_mode != 0:
             self.blursharpen_amount = np.clip ( io.input_int ("Choose blur/sharpen amount", 0, add_info="-100..100"), -100, 100 )
@@ -192,42 +191,42 @@ class MergerConfigMasked(MergerConfig):
         for key in mode_dict.keys():
             s += f"""({key}) {mode_dict[key]}\n"""
         io.log_info(s)
-        mode = io.input_int ("", mode_str_dict.get(self.default_mode, 1) )
+        mode = settings.merging_mode#io.input_int ("", mode_str_dict.get(self.default_mode, 1) )
 
         self.mode = mode_dict.get (mode, self.default_mode )
 
         if 'raw' not in self.mode:
             if self.mode == 'hist-match':
-                self.masked_hist_match = io.input_bool("Masked hist match?", True)
+                self.masked_hist_match = settings.masked_hist_match#io.input_bool("Masked hist match?", True)
 
             if self.mode == 'hist-match' or self.mode == 'seamless-hist-match':
-                self.hist_match_threshold = np.clip ( io.input_int("Hist match threshold", 255, add_info="0..255"), 0, 255)
+                self.hist_match_threshold = np.clip ( settings.hist_match_threshold, 0, 255)
 
         s = """Choose mask mode: \n"""
         for key in mask_mode_dict.keys():
             s += f"""({key}) {mask_mode_dict[key]}\n"""
         io.log_info(s)
-        self.mask_mode = io.input_int ("", 1, valid_list=mask_mode_dict.keys() )
+        self.mask_mode = settings.mask_merging_mode#io.input_int ("", 1, valid_list=mask_mode_dict.keys() )
 
         if 'raw' not in self.mode:
-            self.erode_mask_modifier = np.clip ( io.input_int ("Choose erode mask modifier", 0, add_info="-400..400"), -400, 400)
-            self.blur_mask_modifier =  np.clip ( io.input_int ("Choose blur mask modifier", 0, add_info="0..400"), 0, 400)
-            self.motion_blur_power = np.clip ( io.input_int ("Choose motion blur power", 0, add_info="0..100"), 0, 100)
+            self.erode_mask_modifier = np.clip ( settings.erode_mask_modifier, -400, 400)
+            self.blur_mask_modifier =  np.clip ( settings.blur_mask_modifier, 0, 400)
+            self.motion_blur_power = np.clip ( settings.motion_blur_power, 0, 100)
 
-        self.output_face_scale = np.clip (io.input_int ("Choose output face scale modifier", 0, add_info="-50..50" ), -50, 50)
+        self.output_face_scale = np.clip (settings.output_face_scale, -50, 50)
 
         if 'raw' not in self.mode:
-            self.color_transfer_mode = io.input_str ( "Color transfer to predicted face", None, valid_list=list(ctm_str_dict.keys())[1:] )
+            self.color_transfer_mode =  settings.super_resolution_power, 0, 100.color_transfer_mode#io.input_str ( "Color transfer to predicted face", None, valid_list=list(ctm_str_dict.keys())[1:] )
             self.color_transfer_mode = ctm_str_dict[self.color_transfer_mode]
 
         super().ask_settings()
 
-        self.super_resolution_power = np.clip ( io.input_int ("Choose super resolution power", 0, add_info="0..100", help_message="Enhance details by applying superresolution network."), 0, 100)
+        self.super_resolution_power = np.clip ( settings.super_resolution_power, 0, 100)
 
         if 'raw' not in self.mode:
-            self.image_denoise_power = np.clip ( io.input_int ("Choose image degrade by denoise power", 0, add_info="0..500"), 0, 500)
-            self.bicubic_degrade_power = np.clip ( io.input_int ("Choose image degrade by bicubic rescale power", 0, add_info="0..100"), 0, 100)
-            self.color_degrade_power = np.clip (  io.input_int ("Degrade color power of final image", 0, add_info="0..100"), 0, 100)
+            self.image_denoise_power = np.clip ( settings.image_denoise_power, 0, 500)
+            self.bicubic_degrade_power = np.clip ( settings.bicubic_degrade_power, 0, 100)
+            self.color_degrade_power = np.clip ( settings.color_degrade_power, 0, 100)
 
         io.log_info ("")
 

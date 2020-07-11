@@ -261,13 +261,13 @@ class ModelBase(object):
         self.last_sample = self.sample_for_preview
 
     def load_or_def_option(self, name, def_value):
-        options_val = self.options.get(name, None)
-        if options_val is not None:
-            return options_val
+        #options_val = self.options.get(name, None)
+        #if options_val is not None:
+        #    return options_val
 
-        def_opt_val = self.default_options.get(name, None)
-        if def_opt_val is not None:
-            return def_opt_val
+        #def_opt_val = self.default_options.get(name, None)
+        #if def_opt_val is not None:
+        #    return def_opt_val
 
         return def_value
 

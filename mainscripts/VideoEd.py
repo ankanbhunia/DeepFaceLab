@@ -4,6 +4,8 @@ import ffmpeg
 from pathlib import Path
 from core import pathex
 from core.interact import interact as io
+import settings
+
 
 def extract_video(input_file, output_dir, output_ext=None, fps=None):
     input_file_path = Path(input_file)
@@ -24,10 +26,10 @@ def extract_video(input_file, output_dir, output_ext=None, fps=None):
         return
 
     if fps is None:
-        fps = io.input_int ("Enter FPS", 0, help_message="How many frames of every second of the video will be extracted. 0 - full fps")
+        fps = settings.fps#io.input_int ("Enter FPS", 0, help_message="How many frames of every second of the video will be extracted. 0 - full fps")
 
     if output_ext is None:
-        output_ext = io.input_str ("Output image format", "png", ["png","jpg"], help_message="png is lossless, but extraction is x10 slower for HDD, requires x10 more disk space than jpg.")
+        output_ext = #io.input_str ("Output image format", "png", ["png","jpg"], help_message="png is lossless, but extraction is x10 slower for HDD, requires x10 more disk space than jpg.")
 
     for filename in pathex.get_image_paths (output_path, ['.'+output_ext]):
         Path(filename).unlink()
@@ -105,11 +107,11 @@ def denoise_image_sequence( input_dir, ext=None, factor=None ):
                 return
 
     if factor is None:
-        factor = np.clip ( io.input_int ("Denoise factor?", 7, add_info="1-20"), 1, 20 )
+        factor = np.clip ( settings.Denoise_factor, 1, 20)#io.input_int ("Denoise factor?", 7, add_info="1-20"), 1, 20 )
 
     # Rename to temporary filenames
     for i,filepath in io.progress_bar_generator( enumerate(image_paths), "Renaming", leave=False):
-        src = filepath
+        src = filepathdenoise
         dst = filepath.parent / ( f'{i+1:06}_{filepath.name}' )
         try:
             src.rename (dst)

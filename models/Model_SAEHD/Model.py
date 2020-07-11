@@ -11,6 +11,8 @@ from facelib import FaceType
 from models import ModelBase
 from samplelib import *
 
+import settings
+
 class SAEHDModel(ModelBase):
 
     #override
@@ -30,34 +32,34 @@ class SAEHDModel(ModelBase):
         min_res = 64
         max_res = 640
         
-        default_resolution         = self.options['resolution']         = self.load_or_def_option('resolution', 128)
-        default_face_type          = self.options['face_type']          = self.load_or_def_option('face_type', 'f')
-        default_models_opt_on_gpu  = self.options['models_opt_on_gpu']  = self.load_or_def_option('models_opt_on_gpu', True)
+        default_resolution         = self.options['resolution']         = self.load_or_def_option('resolution', settings.Resolution)
+        default_face_type          = self.options['face_type']          = self.load_or_def_option('face_type', settings.Face_Type)
+        default_models_opt_on_gpu  = self.options['models_opt_on_gpu']  = self.load_or_def_option('models_opt_on_gpu', settings.models_opt_on_gpu)
 
         archi = self.load_or_def_option('archi', 'df')
         archi = {'dfuhd':'df-u','liaeuhd':'liae-u'}.get(archi, archi) #backward comp
         default_archi              = self.options['archi'] = archi
 
-        default_ae_dims            = self.options['ae_dims']            = self.load_or_def_option('ae_dims', 256)
-        default_e_dims             = self.options['e_dims']             = self.load_or_def_option('e_dims', 64)
-        default_d_dims             = self.options['d_dims']             = self.options.get('d_dims', None)
-        default_d_mask_dims        = self.options['d_mask_dims']        = self.options.get('d_mask_dims', None)
-        default_masked_training    = self.options['masked_training']    = self.load_or_def_option('masked_training', True)
-        default_eyes_prio          = self.options['eyes_prio']          = self.load_or_def_option('eyes_prio', False)
-        default_uniform_yaw        = self.options['uniform_yaw']        = self.load_or_def_option('uniform_yaw', False)
+        default_ae_dims            = self.options['ae_dims']            = self.load_or_def_option('ae_dims', settings.ae_dims)
+        default_e_dims             = self.options['e_dims']             = self.load_or_def_option('e_dims', settings.e_dims)
+        default_d_dims             = self.options['d_dims']             = self.options.get('d_dims', settings.d_dims)
+        default_d_mask_dims        = self.options['d_mask_dims']        = self.options.get('d_mask_dims', settings.d_mask_dims)
+        default_masked_training    = self.options['masked_training']    = self.load_or_def_option('masked_training', settings.masked_training)
+        default_eyes_prio          = self.options['eyes_prio']          = self.load_or_def_option('eyes_prio', settings.eyes_prio)
+        default_uniform_yaw        = self.options['uniform_yaw']        = self.load_or_def_option('uniform_yaw', settings.uniform_yaw)
 
         lr_dropout = self.load_or_def_option('lr_dropout', 'n')
         lr_dropout = {True:'y', False:'n'}.get(lr_dropout, lr_dropout) #backward comp
         default_lr_dropout         = self.options['lr_dropout'] = lr_dropout
 
-        default_random_warp        = self.options['random_warp']        = self.load_or_def_option('random_warp', True)
-        default_gan_power          = self.options['gan_power']          = self.load_or_def_option('gan_power', 0.0)
-        default_true_face_power    = self.options['true_face_power']    = self.load_or_def_option('true_face_power', 0.0)
-        default_face_style_power   = self.options['face_style_power']   = self.load_or_def_option('face_style_power', 0.0)
-        default_bg_style_power     = self.options['bg_style_power']     = self.load_or_def_option('bg_style_power', 0.0)
-        default_ct_mode            = self.options['ct_mode']            = self.load_or_def_option('ct_mode', 'none')
-        default_clipgrad           = self.options['clipgrad']           = self.load_or_def_option('clipgrad', False)
-        default_pretrain           = self.options['pretrain']           = self.load_or_def_option('pretrain', False)
+        default_random_warp        = self.options['random_warp']        = self.load_or_def_option('random_warp', settings.random_warp)
+        default_gan_power          = self.options['gan_power']          = self.load_or_def_option('gan_power', settings.gan_power)
+        default_true_face_power    = self.options['true_face_power']    = self.load_or_def_option('true_face_power', settings.true_face_power)
+        default_face_style_power   = self.options['face_style_power']   = self.load_or_def_option('face_style_power', settings.face_style_power)
+        default_bg_style_power     = self.options['bg_style_power']     = self.load_or_def_option('bg_style_power', settings.bg_style_power)
+        default_ct_mode            = self.options['ct_mode']            = self.load_or_def_option('ct_mode', settings.ct_mode)
+        default_clipgrad           = self.options['clipgrad']           = self.load_or_def_option('clipgrad', settings.clipgrad)
+        default_pretrain           = self.options['pretrain']           = self.load_or_def_option('pretrain', settings.pretrain)
 
         ask_override = self.ask_override()
         if self.is_first_run() or ask_override:
@@ -68,10 +70,10 @@ class SAEHDModel(ModelBase):
             self.ask_batch_size(suggest_batch_size)
 
         if self.is_first_run():
-            resolution = io.input_int("Resolution", default_resolution, add_info="64-640", help_message="More resolution requires more VRAM and time to train. Value will be adjusted to multiple of 16 and 32 for -d archi.")
+            resolution = settings.Resolution#io.input_int("Resolution", default_resolution, add_info="64-640", help_message="More resolution requires more VRAM and time to train. Value will be adjusted to multiple of 16 and 32 for -d archi.")
             resolution = np.clip ( (resolution // 16) * 16, min_res, max_res)
             self.options['resolution'] = resolution
-            self.options['face_type'] = io.input_str ("Face type", default_face_type, ['h','mf','f','wf','head'], help_message="Half / mid face / full face / whole face / head. Half face has better resolution, but covers less area of cheeks. Mid face is 30% wider than half face. 'Whole face' covers full area of face include forehead. 'head' covers full head, but requires XSeg for src and dst faceset.").lower()
+            self.options['face_type'] = settings.Face_Type #io.input_str ("Face type", default_face_type, ['h','mf','f','wf','head'], help_message="Half / mid face / full face / whole face / head. Half face has better resolution, but covers less area of cheeks. Mid face is 30% wider than half face. 'Whole face' covers full area of face include forehead. 'head' covers full head, but requires XSeg for src and dst faceset.").lower()
 
             while True:
                 archi = io.input_str ("AE architecture", default_archi, help_message=\
@@ -107,7 +109,7 @@ Examples: df, liae, df-d, df-ud, liae-ud, ...
                 break
             self.options['archi'] = archi
 
-        default_d_dims             = self.options['d_dims']             = self.load_or_def_option('d_dims', 64)
+        default_d_dims             = self.options['d_dims']             = self.load_or_def_option('d_dims', settings.d_dims)
 
         default_d_mask_dims        = default_d_dims // 3
         default_d_mask_dims        += default_d_mask_dims % 2

@@ -22,7 +22,7 @@ from core.leras import nn
 from core import pathex
 from core.cv2ex import *
 from DFLIMG import *
-
+import settings
 DEBUG = False
 
 class ExtractSubprocessor(Subprocessor):
@@ -787,19 +787,19 @@ def main(detector=None,
                     if not cpu_only else nn.DeviceConfig.CPU()
 
     if face_type is None:
-        face_type = io.input_str ("Face type", 'wf', ['f','wf','head'], help_message="Full face / whole face / head. 'Whole face' covers full area of face include forehead. 'head' covers full head, but requires XSeg for src and dst faceset.").lower()
+        face_type = settings.Face_Type#io.input_str ("Face type", 'wf', ['f','wf','head'], help_message="Full face / whole face / head. 'Whole face' covers full area of face include forehead. 'head' covers full head, but requires XSeg for src and dst faceset.").lower()
         face_type = {'f'  : FaceType.FULL,
                      'wf' : FaceType.WHOLE_FACE,
                      'head' : FaceType.HEAD}[face_type]
 
     if max_faces_from_image is None:
-        max_faces_from_image = io.input_int(f"Max number of faces from image", 0, help_message="If you extract a src faceset that has frames with a large number of faces, it is advisable to set max faces to 3 to speed up extraction. 0 - unlimited")
+        max_faces_from_image = settings.max_faces_from_image#io.input_int(f"Max number of faces from image", 0, help_message="If you extract a src faceset that has frames with a large number of faces, it is advisable to set max faces to 3 to speed up extraction. 0 - unlimited")
 
     if image_size is None:
-        image_size = io.input_int(f"Image size", 512 if face_type < FaceType.HEAD else 768, valid_range=[256,2048], help_message="Output image size. The higher image size, the worse face-enhancer works. Use higher than 512 value only if the source image is sharp enough and the face does not need to be enhanced.")
+        image_size = settings.Output_image_Resolution#io.input_int(f"Image size", 512 if face_type < FaceType.HEAD else 768, valid_range=[256,2048], help_message="Output image size. The higher image size, the worse face-enhancer works. Use higher than 512 value only if the source image is sharp enough and the face does not need to be enhanced.")
 
     if jpeg_quality is None:
-        jpeg_quality = io.input_int(f"Jpeg quality", 90, valid_range=[1,100], help_message="Jpeg quality. The higher jpeg quality the larger the output file size.")
+        jpeg_quality = settings.jpeg_quality#io.input_int(f"Jpeg quality", 90, valid_range=[1,100], help_message="Jpeg quality. The higher jpeg quality the larger the output file size.")
 
     if detector is None:
         io.log_info ("Choose detector type.")
@@ -809,7 +809,7 @@ def main(detector=None,
 
 
     if output_debug is None:
-        output_debug = io.input_bool (f"Write debug images to {output_debug_path.name}?", False)
+        output_debug = settings.output_debug#io.input_bool (f"Write debug images to {output_debug_path.name}?", False)
 
     if output_debug:
         output_debug_path.mkdir(parents=True, exist_ok=True)

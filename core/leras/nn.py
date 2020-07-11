@@ -27,6 +27,7 @@ from core.interact import interact as io
 from .device import Devices
 
 
+
 class nn():
     current_DeviceConfig = None
 
