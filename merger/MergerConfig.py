@@ -38,7 +38,7 @@ class MergerConfig(object):
         self.sharpen_mode = settings.sharpen_mode#io.input_int ("", 0, valid_list=self.sharpen_dict.keys(), help_message="Enhance details by applying sharpen filter.")
 
         if self.sharpen_mode != 0:
-            self.blursharpen_amount = np.clip ( io.input_int ("Choose blur/sharpen amount", 0, add_info="-100..100"), -100, 100 )
+            self.blursharpen_amount = np.clip ( settings.blursharpen_amount, -100, 100 )#io.input_int ("Choose blur/sharpen amount", 0, add_info="-100..100")
 
     def toggle_sharpen_mode(self):
         a = list( self.sharpen_dict.keys() )
@@ -216,7 +216,7 @@ class MergerConfigMasked(MergerConfig):
         self.output_face_scale = np.clip (settings.output_face_scale, -50, 50)
 
         if 'raw' not in self.mode:
-            self.color_transfer_mode =  settings.super_resolution_power, 0, 100.color_transfer_mode#io.input_str ( "Color transfer to predicted face", None, valid_list=list(ctm_str_dict.keys())[1:] )
+            self.color_transfer_mode =  settings.color_transfer_mode#, 0, 100.color_transfer_mode#io.input_str ( "Color transfer to predicted face", None, valid_list=list(ctm_str_dict.keys())[1:] )
             self.color_transfer_mode = ctm_str_dict[self.color_transfer_mode]
 
         super().ask_settings()

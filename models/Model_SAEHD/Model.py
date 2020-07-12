@@ -109,7 +109,7 @@ Examples: df, liae, df-d, df-ud, liae-ud, ...
                 break
             self.options['archi'] = archi
 
-        default_d_dims             = self.options['d_dims']             = self.load_or_def_option('d_dims', settings.d_dims)
+        default_d_dims             = self.options['d_dims']             = self.load_or_def_option('d_dims', 64)
 
         default_d_mask_dims        = default_d_dims // 3
         default_d_mask_dims        += default_d_mask_dims % 2
