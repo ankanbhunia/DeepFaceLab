@@ -170,7 +170,7 @@ class ModelBase(object):
                 pass
 
         self.choose_preview_history = False
-        self.batch_size = self.load_or_def_option('batch_size', 1)
+        self.batch_size = self.load_or_def_option('batch_size', settings.Batch_size)
         #####
 
         io.input_skip_pending()
