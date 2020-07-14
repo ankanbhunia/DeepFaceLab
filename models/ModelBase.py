@@ -18,7 +18,7 @@ from core.leras import nn
 from samplelib import SampleGeneratorBase
 from core import pathex
 from core.cv2ex import *
-
+import settings
 
 class ModelBase(object):
     def __init__(self, is_training=False,
