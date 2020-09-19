@@ -1,8 +1,8 @@
 import os
-
+from IPython.display import HTML, clear_output
 from IPython.display import Javascript
 from google.colab.output import eval_js
-
+clear_output()
 if not os.path.isfile('/tmp/done'):
   if not os.path.isdir('/content/drive/'):
     from google.colab import drive; drive.mount('/content/drive', force_remount=True) 
@@ -20,7 +20,7 @@ def show_port(port, height=400):
     document.body.append(fm)
   })();
   """ % (port, height) ))
-
+clear_output()
 print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
 
 get_ipython().system_raw('python3 app.py')
