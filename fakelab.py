@@ -14,6 +14,8 @@ if len(tf.config.list_physical_devices('GPU'))==0:
 if not os.path.isfile('/tmp/done'):
   if not os.path.isdir('/content/drive/'):
     from google.colab import drive; drive.mount('/content/drive', force_remount=True) 
+    
+  print ('Please wait for few minutes... ')
   get_ipython().system_raw('pip uninstall -y tensorflow; pip install tensorflow-gpu==1.13.2; git clone https://github.com/ankanbhunia/deeplabs ; cp -r deeplabs/* /content; rm -r deeplabs; python install_.py; touch /tmp/done')
 
 
