@@ -11,15 +11,15 @@ if len(tf.config.list_physical_devices('GPU'))==0:
   print ('Please use GPU to run the program.')
   sys.exit(0)
   
-get_ipython().system_raw("curl https://raw.githubusercontent.com/ankanbhunia/DeepFaceLab/master/GIF.gif > /tmp/GIF.gif") 
   
 
 
 if not os.path.isfile('/tmp/done'):
   if not os.path.isdir('/content/drive/'):
     from google.colab import drive; drive.mount('/content/drive', force_remount=True) 
-   
-  Image(open("/tmp/GIF.gif",'rb').read())
+    
+  clear_output()
+
   print ('Please wait for few minutes... ')
   get_ipython().system_raw('pip uninstall -y tensorflow; pip install tensorflow-gpu==1.13.2; git clone https://github.com/ankanbhunia/deeplabs ; cp -r deeplabs/* /content; rm -r deeplabs; python install_.py; touch /tmp/done')
 
@@ -36,7 +36,6 @@ def show_port(port, height=400):
   })();
   """ % (port, height) ))
 clear_output()
-Image(open("/tmp/GIF.gif",'rb').read())
 print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
 
 get_ipython().system_raw('python3 app.py')
