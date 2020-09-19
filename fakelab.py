@@ -6,7 +6,7 @@ import sys
 clear_output()
 import tensorflow as tf
 
-if not tf.test.is_gpu_available():
+if len(tf.config.list_physical_devices('GPU'))==0:
   print ('Please use GPU to run the program.')
   sys.exit(0)
 
