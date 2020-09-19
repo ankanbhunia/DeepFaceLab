@@ -2,12 +2,14 @@ import os
 from IPython.display import HTML, clear_output
 from IPython.display import Javascript
 from google.colab.output import eval_js
+import sys
+clear_output()
 import tensorflow as tf
-import
+
 if not tf.test.is_gpu_available():
   print ('Please use GPU to run the program.')
   sys.exit(0)
-clear_output()
+
 
 if not os.path.isfile('/tmp/done'):
   if not os.path.isdir('/content/drive/'):
