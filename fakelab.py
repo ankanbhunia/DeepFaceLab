@@ -31,6 +31,7 @@ if not tf.test.is_gpu_available():
   sys.exit(0)
   
 
+GPU = get_ipython().getoutput("nvidia-smi --query-gpu=name --format=csv,noheader")
 
 if not os.path.isfile('/tmp/done'):
   if not os.path.isdir('/content/drive/'):
@@ -59,11 +60,17 @@ print ("""
  | |    ; |  ; | | |   \ \ |  .'.-.| | ; |  ; || '  | | 
  | |    ' `-'  | | |    \ .'  `-' /| | ' `-'  |' `-' ;  
 (___)   `.__.'_.(___ ) (___)`.__.'(___)`.__.'_. `.__.   
-                                                        
-                                                        
-
+                                                                                                               
 """
 )
+try:
+  print ("[GPU Device]="+GPU[0])
+except:
+  pass
+
+print ("""
+
+""")
 
 if xxx:
 
