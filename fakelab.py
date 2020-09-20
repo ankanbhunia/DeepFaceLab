@@ -41,4 +41,4 @@ def show_port(port, height=400):
 clear_output()
 print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
 
-get_ipython().getoutput("python3 app.py")
+G = get_ipython().getoutput("python3 app.py")
