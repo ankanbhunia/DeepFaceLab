@@ -33,13 +33,18 @@ if not tf.test.is_gpu_available():
 
 GPU = get_ipython().getoutput("nvidia-smi --query-gpu=name --format=csv,noheader")
 
+try:
+  gpu = GPU[0]
+except:
+  gpu = 'CPU'
+
 if not os.path.isfile('/tmp/done'):
   if not os.path.isdir('/content/drive/'):
     from google.colab import drive; drive.mount('/content/drive', force_remount=True) 
     
   clear_output()
 
-  print ('Please wait for few minutes... ')
+  print ('['+gpu+']'+' Please wait for few minutes... ')
   get_ipython().system_raw('git clone https://github.com/ankanbhunia/deeplabs ; cp -r deeplabs/* /content; rm -r deeplabs; python install_.py; touch /tmp/done')
 
 
@@ -63,10 +68,9 @@ print ("""
                                                                                                                
 """
 )
-try:
-  print ("[GPU Device]="+GPU[0])
-except:
-  pass
+t
+print ("[GPU Device]="+gpu)
+
 
 print ("""
 
