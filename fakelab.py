@@ -68,7 +68,7 @@ print ("""
                                                                                                                
 """
 )
-t
+
 print ("[GPU Device]="+gpu)
 
 
