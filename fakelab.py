@@ -3,6 +3,21 @@ from IPython.display import HTML, clear_output
 from IPython.display import Javascript
 from IPython.display import Image
 from google.colab.output import eval_js
+import argparse
+
+parser = argparse.ArgumentParser(description='FakeLab Options')
+
+parser.add_argument('ngrok_auth_token', type=str, nargs='?',
+                    help='Enter ngrok Authtoken from https://dashboard.ngrok.com/auth/your-authtoken ')
+
+parser.add_argument('--no_output', action='store_true',
+                    help='the shell output will be disabled')
+
+args = parser.parse_args()
+
+xxx = args.ngrok_auth_token
+no_output_ = args.no_output
+
 import sys
 clear_output()
 
@@ -27,17 +42,7 @@ if not os.path.isfile('/tmp/done'):
   get_ipython().system_raw('git clone https://github.com/ankanbhunia/deeplabs ; cp -r deeplabs/* /content; rm -r deeplabs; python install_.py; touch /tmp/done')
 
 
-def show_port(port, height=400):
-  display(Javascript("""
-  (async ()=>{
-    fm = document.createElement('iframe')
-    fm.src = await google.colab.kernel.proxyPort(%s)
-    fm.width = '95%%'
-    fm.height = '%d'
-    fm.frameBorder = 0
-    document.body.append(fm)
-  })();
-  """ % (port, height) ))
+
 clear_output()
 
 print ("""
@@ -60,7 +65,24 @@ print ("""
 """
 )
 
-print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
+if xxx:
+
+  try:
+
+    get_ipython().system_raw("pip install pyngrok")
+    get_ipython().system_raw("ngrok authtoken " + xxx)
+    from pyngrok import ngrok
+    print("Project URL: "+ngrok.connect(port = '8000'))
+
+  except:
+
+    print ('The ngrok token is invalid')
+    print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
+
+else:
+
+  print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
+
 
 print("""
                                                                                                                                                                                                  
@@ -70,5 +92,7 @@ print("""
                                                                                                                                                                          
 """)
 
-
-get_ipython().getoutput("python3 app.py")
+if no_output_:
+  get_ipython().system_raw("python3 app.py")
+else:
+  get_ipython().getoutput("python3 app.py")
