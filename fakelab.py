@@ -5,12 +5,15 @@ from IPython.display import Image
 from google.colab.output import eval_js
 import sys
 clear_output()
+
+ipy = get_ipython()
+ipy.magic("tensorflow_version 1.x")
+
 import tensorflow as tf
 
-if len(tf.config.list_physical_devices('GPU'))==0:
+if not tf.test.is_gpu_available():
   print ('Please use GPU to run the program.')
   sys.exit(0)
-  
   
 
 
@@ -21,7 +24,7 @@ if not os.path.isfile('/tmp/done'):
   clear_output()
 
   print ('Please wait for few minutes... ')
-  get_ipython().system_raw('pip uninstall -y tensorflow; pip install tensorflow-gpu==1.13.2; git clone https://github.com/ankanbhunia/deeplabs ; cp -r deeplabs/* /content; rm -r deeplabs; python install_.py; touch /tmp/done')
+  get_ipython().system_raw('git clone https://github.com/ankanbhunia/deeplabs ; cp -r deeplabs/* /content; rm -r deeplabs; python install_.py; touch /tmp/done')
 
 
 def show_port(port, height=400):
@@ -38,4 +41,4 @@ def show_port(port, height=400):
 clear_output()
 print("Project URL: "+eval_js("google.colab.kernel.proxyPort(%d)"% (8000)))
 
-get_ipython().system_raw('python3 app.py')
+ipy.magic("run app.py")
