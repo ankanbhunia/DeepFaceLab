@@ -95,4 +95,4 @@ print("""
 if no_output_:
   get_ipython().system_raw("python3 app.py")
 else:
-  get_ipython().getoutput("python3 app.py")
+  G = get_ipython().getoutput("python3 app.py")
